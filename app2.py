@@ -20,7 +20,7 @@ def create_table():
     cursor = conn.cursor() # 커서, 
 
     # 쿼리문 작성
-    sql = f"CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, author TEXT)"
+    sql = f"CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY, title TEXT, author TEXT)"
     cursor.execute(sql) # 쿼리문 실행
     conn.commit() # 쿼리 반영하기
     conn.close() # 닫아주기 
@@ -29,8 +29,10 @@ def create_table():
 # add_book
 def add_book(title, author):
     conn = get_db_connection()
-    cursor = conn.cursor() # 커서, 
-    sql = f'INSERT INTO books (title, author) VALUES ('{title}', '{author}')'
+    cursor = conn.cursor() # 커서
+    title, author = str(title), str(author)
+    sql = f"INSERT INTO books (title, author) VALUES ('{title}', '{author}')"
+    print(sql)
     cursor.execute(sql) # 쿼리문 실행
     conn.commit()
     conn.close()
@@ -42,11 +44,10 @@ def main():
     if request.method == 'POST':
         print("유저로부터 POST 요청 받는 중 ...")
         title = request.form['title']
-        author = request.form['quthor']
+        author = request.form['author']
         add_book(title, author)
 
     return render_template('index.html') # render 그려주기 
 
 if __name__ == "__main__":
     app.run()
-
